@@ -2,7 +2,397 @@
 <br>
 
 
+## [ 12월 08일 ]
+<br>
+# 리액트개념
 
+> 컴포넌트가 렌더링하는 것을 막기
+- 다른 컴포넌트에 의해 렌더링될 때 컴포넌트 자체를 숨기고 싶을 때가 있을 수 있습니다.   
+이때는 렌더링 결과를 출력하는 대신 null을 반환하면 해결할 수 있습니다.
+- 예시에서는 <WarningBanner />가 warn prop의 값에 의해서 렌더링됩니다. prop이 false라면 컴포넌트는 렌더링하지 않게 됩니다.
+
+>  Avatar 옆에 사용자의 이름을 렌더링하는 UserInfo 컴포넌트를 추출하기
+ ```javascript
+function WarningBanner(props) {
+  if (!props.warn) {
+    return null;
+  }
+
+  return (
+    <div className="warning">
+      Warning!
+    </div>
+  );
+}
+
+class Page extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {showWarning: true};
+    this.handleToggleClick = this.handleToggleClick.bind(this);
+  }
+
+  handleToggleClick() {
+    this.setState(state => ({
+      showWarning: !state.showWarning
+    }));
+  }
+
+  render() {
+    return (
+      <div>
+        <WarningBanner warn={this.state.showWarning} />
+        <button onClick={this.handleToggleClick}>
+          {this.state.showWarning ? 'Hide' : 'Show'}
+        </button>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Page />,
+  document.getElementById('root')
+);
+ ```
+
+> textarea 태그
+```javascript
+<textarea>
+  Hello there, this is some text in a text area
+</textarea>
+```
+> select 태그
+- HTML에서 select는 드롭 다운 목록을 만듭니다. 예를 들어, 이 HTML은 과일 드롭 다운 목록을 만듭니다.
+```javascript
+<textarea>
+  <select>
+  <option value="grapefruit">Grapefruit</option>
+  <option value="lime">Lime</option>
+  <option selected value="coconut">Coconut</option>
+  <option value="mango">Mango</option>
+</select>
+</textarea>
+```
+> file 태그
+- HTML에서 <input type="file">는 사용자가 하나 이상의 파일을 자신의 장치 저장소에서 서버로 업로드하거나 File API를 통해 JavaScript로 조작할 수 있습니다.
+```javascript
+<input type="file" />
+```
+
+---
+
+## [ 12월 01일 ]
+<br>
+# 리액트개념
+
+> 컴포넌트 추출
+- 컴포넌트 추출: 컴포넌트를 여러 개의 작은 컴포넌트로 나누어 관리 편의성 및 가독성을 높인다
+- props는 읽기 전용이기 때문에 함수 혹은 클래스 컴포넌트 모두 자체 props를 수정해서는 안된다
+- React는 매우 유연하지만 한 가지 엄격한 규칙이 있다. 모든 React컴포넌트는 자신의 props를 다출 때 반드시 순수 함수처럼 동작해야 합니다.
+
+>  Avatar 옆에 사용자의 이름을 렌더링하는 UserInfo 컴포넌트를 추출하기
+ ```javascript
+function UserInfo(props) {
+  return (
+    <div className="UserInfo">
+      <Avatar user={props.user} />
+      <div className="UserInfo-name">
+        {props.user.name}
+      </div>
+    </div>
+  );
+}
+ ```
+  
+
+#props는 읽기 전용이다
+ ```javascript
+- function sum(a, b) {
+  return a + b;
+  }
+```
+- 이런 함수들은 순수 함수라고 호칭합니다.   
+입력값을 바꾸려 하지 않고 항상 동일한 입력값에 대해 동일한 결과를 반환하기 때문입니다.  
+반면에 다음 함수는 자신의 입력값을 변경하기 때문에 순수 함수가 아닙니다.
+ ```javascript
+function withdraw(account, amount) {
+  account.total -= amount;
+}
+```
+  
+#함수에서 클래스로 변환하기
+1. React.Component를 확장하는 동일한 이름의 ES6 class를 생성합니다.
+2. render()라고 불리는 빈 메서드를 추가합니다.
+3. 함수의 내용을 render() 메서드 안으로 옮깁니다.
+4. render() 내용 안에 있는 props를 this.props로 변경합니다.
+5. 남아있는 빈 함수 선언을 삭제합니다.
+ ```javascript
+class Clock extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.props.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+```
+#이벤트 처리하기
+- React의 이벤트는 소문자 대신 캐멀 케이스(camelCase)를 사용합니다.
+- JSX를 사용하여 문자열이 아닌 함수로 이벤트 핸들러를 전달합니다.
+> html의 경우
+```javascript
+<button onclick="activateLasers()">
+  Activate Lasers
+</button>
+```
+
+> React의 경우
+```javascript
+<button onClick={activateLasers}>
+  Activate Lasers
+</button>
+```
+
+---
+
+## [ 11월 24일 ]
+<br>
+# 네번째 예제, 리액트 개념
+
+> create-react-app으로 remarkable 사용하기
+- create-reacte-app으로 markdown-editor프로젝트를 생성한다.
+- 정상동작을 확인한다.
+- app.js에 있는 필요없는 코드를 삭제한다.
+- app.js에 문서의 코드를 복사해 넣는다.
+- componenet의 이름을 App으로 수정한다.
+- rendering은 index.js에 위임한다.
+- remarkable을 설치한다
+- React와 Remarkable을 import한다.
+- 동작이 되는지 확인한다.  
+
+> code review
+- 외부 컴포넌트를 사용하기 위해 생성자 내에 객체를 생성한다.
+- state를 이용하여 Remarkable에 변환할 마크다운 문장을 제출한다.
+- 글이 입력되면 handleChange 이벤트를 사용하여 state의 value를 갱신한다.
+- getRawMarkup()메소드를 통해 html을 반환 받는다.
+  
+
+> JSX에 표현식 포함하기
+ ```javascript
+const name = 'Josh Perez';
+const element = <h1>Hello, {name}</h1>;
+
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);
+ ```
+
+ > JSX 자식정의
+ - 태그가 비어있다면 XML처럼 /> 를 이용해 바로 닫아주어야 합니다.
+ ```javascript
+const element = <img src={user.avatarUrl} />;
+ ```  
+
+- JSX 태그는 자식을 포함할 수 있습니다.
+ ```javascript
+const element = (
+  <div>
+    <h1>Hello!</h1>
+    <h2>Good to see you here.</h2>
+  </div>
+);
+ ```
+
+ > DOM에 엘리먼트 렌더링하기
+  ```javascript
+<div id="root"></div> 
+```
+- React 엘리먼트를 루트 DOM 노드에 렌더링하려면 둘 다 ReactDOM.render()로 전달하면 됩니다.
+```javascript
+const element = <h1>Hello, world</h1>;
+ReactDOM.render(element, document.getElementById('root'));
+  ```
+
+
+## [ 11월 17일 ]
+<br>
+# 리액트 활용
+
+> todo app 만들기
+ ```javascript
+class TodoApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { items: [], text: '' };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  render() {
+    return (
+      <div>
+        <h3>TODO</h3>
+        <TodoList items={this.state.items} />
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="new-todo">
+            What needs to be done?
+          </label>
+          <input
+            id="new-todo"
+            onChange={this.handleChange}
+            value={this.state.text}
+          />
+          <button>
+            Add #{this.state.items.length + 1}
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  handleChange(e) {
+    this.setState({ text: e.target.value });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.state.text.length === 0) {
+      return;
+    }
+    const newItem = {
+      text: this.state.text,
+      id: Date.now()
+    };
+    this.setState(state => ({
+      items: state.items.concat(newItem),
+      text: ''
+    }));
+  }
+}
+
+class TodoList extends React.Component {
+  render() {
+    return (
+      <ul>
+        {this.props.items.map(item => (
+          <li key={item.id}>{item.text}</li>
+        ))}
+      </ul>
+    );
+  }
+}
+
+ReactDOM.render(
+  <TodoApp />,
+  document.getElementById('todos-example')
+);
+ ```
+
+
+> markdown 만들기
+```javascript
+npx create-react-app markdown
+```
+- npx인 이유 => npm 5.2+ 버전의 패키지 실행 도구라고 함 !   
+npm으로 create하려다가 실패했음 !  
+
+> package-lock.json  코드 변경사항확인
+```javascript
+{
+  "requires": true,
+  "lockfileVersion": 1,
+  "dependencies": {
+    "argparse": {
+      "version": "1.0.10",
+      "resolved": "https://registry.npmjs.org/argparse/-/argparse-1.0.10.tgz",
+      "integrity": "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==",
+      "requires": {
+        "sprintf-js": "~1.0.2"
+      }
+    },
+    "autolinker": {
+      "version": "3.14.3",
+      "resolved": "https://registry.npmjs.org/autolinker/-/autolinker-3.14.3.tgz",
+      "integrity": "sha512-t81i2bCpS+s+5FIhatoww9DmpjhbdiimuU9ATEuLxtZMQ7jLv9fyFn7SWNG8IkEfD4AmYyirL1ss9k1aqVWRvg==",
+      "requires": {
+        "tslib": "^1.9.3"
+      }
+    },
+    "remarkable": {
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/remarkable/-/remarkable-2.0.1.tgz",
+      "integrity": "sha512-YJyMcOH5lrR+kZdmB0aJJ4+93bEojRZ1HGDn9Eagu6ibg7aVZhc3OWbbShRid+Q5eAfsEqWxpe+g5W5nYNfNiA==",
+      "requires": {
+        "argparse": "^1.0.10",
+        "autolinker": "^3.11.0"
+      }
+    },
+    "sprintf-js": {
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz",
+      "integrity": "sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw="
+    },
+    "tslib": {
+      "version": "1.14.1",
+      "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz",
+      "integrity": "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
+    }
+  }
+}   
+```
+
+> remarkable을 사용해 <textarea>의 값을 실시간으로 변환합니다.
+```javascript
+class MarkdownEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.md = new Remarkable();
+    this.handleChange = this.handleChange.bind(this);
+    this.state = { value: 'Hello, **world**!' };
+  }
+
+  handleChange(e) {
+    this.setState({ value: e.target.value });
+  }
+
+  getRawMarkup() {
+    return { __html: this.md.render(this.state.value) };
+  }
+
+  render() {
+    return (
+      <div className="MarkdownEditor">
+        <h3>Input</h3>
+        <label htmlFor="markdown-content">
+          Enter some markdown
+        </label>
+        <textarea
+          id="markdown-content"
+          onChange={this.handleChange}
+          defaultValue={this.state.value}
+        />
+        <h3>Output</h3>
+        <div
+          className="content"
+          dangerouslySetInnerHTML={this.getRawMarkup()}
+        />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <MarkdownEditor />,
+  document.getElementById('markdown-example')
+);
+```
+
+
+----
 
 ## [ 11월 10일 ]
 <br>
@@ -66,12 +456,16 @@ export default App;
 
 ``` javascript
  <script src="like_button.js"></script>
-```201
+```
+  
 
 
 
 
 
+
+ 
+ 
 -----
 
 
